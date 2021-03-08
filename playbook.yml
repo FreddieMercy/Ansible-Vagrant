@@ -21,20 +21,21 @@
 
     - name: Copy configuration files.
       command: cp httpd.conf /etc/httpd/conf/httpd.conf
-    - command: cp httpd-vhosts.conf /etc/httpd/conf/httpd-vhosts.conf
+    #- command: cp httpd-vhosts.conf /etc/httpd/conf/httpd-vhosts.conf
 
     - name: Copy configuration files.
       copy:
         src: "{{ item.src }}" # or, "{{ item['src'] }}"
         dest: "{{ item.dest }}"
+        remote_src: yes
         owner: root
         group: root
         mode: 0644
       with_items:
         - src: httpd.conf
           dest: /etc/httpd/conf/httpd.conf
-        - src: httpd-vhosts.conf
-          dest: /etc/httpd/conf/httpd-vhosts.conf
+        #- src: httpd-vhosts.conf
+        #  dest: /etc/httpd/conf/httpd-vhosts.conf
 
     - name: Start Apache and configure it to run at boot
       command: service httpd start
