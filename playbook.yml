@@ -2,6 +2,9 @@
 # otherwise, it is attribute 
 - hosts: all
   become: yes # -b: (default) become superuser
+  vars_files:
+    - vars.yml
+     
   tasks:
     - name: Ensure NTP is installed.
       yum: name=ntp state=present
