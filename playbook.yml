@@ -10,9 +10,18 @@
     
     - name: Install Apache
       command: yum install -y --quiet httpd httpd-devel
+
+    - name: Install Apache
+      yum: 
+        name:
+          - httpd
+          - httpd-devel
+        state: present
+
     - name: Copy configuration files.
       command: cp httpd.conf /etc/httpd/conf/httpd.conf
     - command: cp httpd-vhosts /etc/httpd/conf/httpd-vhosts.conf
+
     - name: Start Apache and configure it to run at boot
       command: service httpd start
     - command: chkconfig httpd on
