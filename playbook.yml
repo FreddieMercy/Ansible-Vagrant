@@ -18,6 +18,9 @@
       service: name=solr state = restarted
 
   tasks:
+    - name: Install Java
+      package: name=openjdk-8-jdk state=present
+      
     - name: Ensure NTP is installed.
       yum: name=ntp state=present
     #- commend: echo Hello World
