@@ -20,7 +20,7 @@
         state: present
 
     - name: Copy configuration files.
-      command: cp httpd.conf /etc/httpd/conf/httpd.conf
+      command: cp /etc/httpd/conf/httpd.conf httpd.conf
     #- command: cp httpd-vhosts.conf /etc/httpd/conf/httpd-vhosts.conf
 
     - name: Copy configuration files.
@@ -32,8 +32,8 @@
         group: root
         mode: 0644
       with_items:
-        - src: httpd.conf
-          dest: /etc/httpd/conf/httpd.conf
+        - dest: httpd.conf
+          src: /etc/httpd/conf/httpd.conf
         #- src: httpd-vhosts.conf
         #  dest: /etc/httpd/conf/httpd-vhosts.conf
 
