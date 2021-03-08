@@ -39,4 +39,12 @@
 
     - name: Start Apache and configure it to run at boot
       command: service httpd start
+
+    - name: Start Apache and configure it to run at boot
+      service: 
+        name: httpd
+        state: started
+        enabled: true # or ... (yes), either way. Use 0/1 may get datatype mismatch error
+        
     - command: chkconfig httpd on
+
