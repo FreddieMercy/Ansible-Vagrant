@@ -4,7 +4,15 @@
   become: yes # -b: (default) become superuser
   vars_files:
     - vars.yml
-     
+  pre_tasks:
+    - name: Update yum cache if needed
+      yum: update_cache=true cache_valid_time=3600
+
+    - name: Update yum cache if needed
+      yum: 
+        update_cache: true
+        cache_valid_time: 3600
+
   tasks:
     - name: Ensure NTP is installed.
       yum: name=ntp state=present
