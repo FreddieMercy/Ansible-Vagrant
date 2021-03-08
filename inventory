@@ -11,3 +11,8 @@
 [multi:children] # make a group that has all we need
 app
 db
+
+# variables for all the servers 
+[multi:vars]
+ansible_ssh_user=vagrant
+ansible_ssh_private_key_file=~/.vagrant.d/insecure_private_key
