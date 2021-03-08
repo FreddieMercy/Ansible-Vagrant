@@ -1,3 +1,4 @@
+# dash ("-") means: things in *array*
 - hosts: all
   become: yes # -b: (default) become superuser
   tasks:
@@ -20,7 +21,20 @@
 
     - name: Copy configuration files.
       command: cp httpd.conf /etc/httpd/conf/httpd.conf
-    - command: cp httpd-vhosts /etc/httpd/conf/httpd-vhosts.conf
+    - command: cp httpd-vhosts.conf /etc/httpd/conf/httpd-vhosts.conf
+
+    - name: Copy configuration files.
+      copy:
+        src: "{{ item.src }}" # or, "{{ item['src'] }}"
+        dest: "{{ }}"
+        owner: root
+        group: root
+        mode: 0644
+      with_items:
+        - src: httpd.conf
+          dest: /etc/httpd/conf/httpd.conf
+        - src: httpd-vhosts.conf
+          dest: /etc/httpd/conf/httpd-vhosts.conf
 
     - name: Start Apache and configure it to run at boot
       command: service httpd start
