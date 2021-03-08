@@ -13,6 +13,10 @@
         update_cache: true
         cache_valid_time: 3600
 
+  handlers: # runs if caught exceptions (errors) 
+    - name: restart solr
+      service: name=solr state = restarted
+
   tasks:
     - name: Ensure NTP is installed.
       yum: name=ntp state=present
