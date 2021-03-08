@@ -1,15 +1,17 @@
 [red-hat] # name: I have a host names "example"
 192.168.177.2 # how do I find "example": can be ip address, hostname, what so ever
 
-[app]
+[app1]
 192.168.60.4
+[app2]
 192.168.60.5
 
 [db]
 192.168.60.6
 
 [multi:children] # make a group that has all we need
-app
+app1
+app2
 db
 
 # variables for all the servers 
