@@ -1,5 +1,5 @@
-[red-hat] # name: I have a host names "example"
-192.168.177.2 # how do I find "example": can be ip address, hostname, what so ever
+#[red-hat] # name: I have a host names "example"
+#192.168.177.2 # how do I find "example": can be ip address, hostname, what so ever
 
 [app1]
 192.168.60.4
