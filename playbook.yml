@@ -1,5 +1,5 @@
 - hosts: all
-  become: yes
+  become: yes # -b: (default) become superuser
   tasks:
     - name: Ensure NTP is installed.
       yum: name=ntp state=present
@@ -7,3 +7,12 @@
     #- shell: echo Nihaoma
     - name: Ensure NTP is running.
       service: name=ntpd state=started enabled=yes
+    
+    - name: Install Apache
+      command: yum install -y --quiet httpd httpd-devel
+    - name: Copy configuration files.
+      command: cp httpd.conf /etc/httpd/conf/httpd.conf
+    - command: cp httpd-vhosts /etc/httpd/conf/httpd-vhosts.conf
+    - name: Start Apache and configure it to run at boot
+      command: service httpd start
+    - command: chkconfig httpd on
