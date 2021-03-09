@@ -8,9 +8,9 @@
     - name: Update yum cache if needed
       command: "yum makecache"
       
-  handlers: # runs if caught exceptions (errors) and has "notify"
+  handlers: # runs if has "change" and has "notify"
     - name: Restart solr
-      service: name=solr state=restarted
+      command: echo "Freddie you called the handler!!!"
 
   tasks:
     - name: Install Java
