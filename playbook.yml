@@ -6,20 +6,15 @@
     - vars.yml
   pre_tasks:
     - name: Update yum cache if needed
-      yum: update_cache=true cache_valid_time=3600
-
-    - name: Update yum cache if needed
-      yum: 
-        update_cache: true
-        cache_valid_time: 3600
-
+      command: "yum makecache"
+      
   handlers: # runs if caught exceptions (errors) 
-    - name: restart solr
-      service: name=solr state = restarted
+    - name: Restart solr
+      service: name=solr state=restarted
 
   tasks:
     - name: Install Java
-      package: name=openjdk-8-jdk state=present
+      package: name=java-1.8.0-openjdk state=present
 
     - name: Download Solr.
       get_url:
