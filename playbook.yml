@@ -13,6 +13,8 @@
       command: echo "Freddie you called the handler!!!"
 
   tasks:
+    - name: Flush Handlers
+      meta: flush_handlers
     - name: Install Java
       package: name=java-1.8.0-openjdk state=present
 
