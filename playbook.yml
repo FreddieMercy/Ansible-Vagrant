@@ -18,6 +18,9 @@
     - name: Handler two
       command: echo "Junhao Nihaoma!!!"
 
+  roles:
+    - theRole1_ButHasToHave_meta_and_tasks
+
   tasks:
       
     - name: Ensure NTP is installed.
