@@ -8,7 +8,7 @@
     - name: Update yum cache if needed
       command: "yum makecache"
       
-  handlers: # runs if caught exceptions (errors) 
+  handlers: # runs if caught exceptions (errors) and has "notify"
     - name: Restart solr
       service: name=solr state=restarted
 
@@ -21,6 +21,7 @@
         url: "https://archive.apache.org/dist/lucene/solr/{{ solr_version }}/solr-{{ solr_version }}.tgz"
         dest: "{{ download_dir }}/solr-{{ solr_version }}.tgz"
         checksum: "{{ solr_checksum }}"
+      notify: Restart solr
 
     - name: Expand Solr.
       unarchive:
