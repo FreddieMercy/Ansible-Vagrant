@@ -60,6 +60,8 @@
         -s solr
         -p 8983
         creates={{ solr_dir }}/bin/solr
+      
+      ignore_errors: True
 
     - name: Flush Handlers
       meta: flush_handlers
