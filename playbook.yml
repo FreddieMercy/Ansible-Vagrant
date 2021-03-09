@@ -175,3 +175,5 @@
 
     - fail: msg="Test ignore_errors" 
       ignore_errors: true
+    
+    - import_tasks: tasksToImport.yml

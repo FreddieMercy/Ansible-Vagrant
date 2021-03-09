@@ -1,0 +1,2 @@
+- name: This is a task that is imported
+  fail: msg="Intend to throw a failure"
