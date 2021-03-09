@@ -19,7 +19,7 @@
       package: name=java-1.8.0-openjdk state=present
       notify: Handler one
 
-    - name: Flush Handlers
+    - name: Flush Handlers # make handler execute immediately, otherwise the handler will wait until the end to run
       meta: flush_handlers
 
     - name: Download Solr.
@@ -27,7 +27,7 @@
         url: "https://archive.apache.org/dist/lucene/solr/{{ solr_version }}/solr-{{ solr_version }}.tgz"
         dest: "{{ download_dir }}/solr-{{ solr_version }}.tgz"
         checksum: "{{ solr_checksum }}"
-      notify: Handler two
+      notify: Handler two # must have the right name of the handler to be called, otherwise will throw error 
 
     - name: Flush Handlers
       meta: flush_handlers
