@@ -157,3 +157,5 @@
         dest: httpd.conf
         regexp: '^# .*'
         line: "Freddie is the best"
+
+        # shell: can use env var. command cannot 
