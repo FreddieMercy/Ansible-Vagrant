@@ -163,5 +163,10 @@
         dest: httpd.conf
         regexp: '^# .*'
         line: "Freddie is the best"
+      
+      register: findAndReplaceOrAppendOneLine # save this whole task to a variable 'findAndReplaceOrAppendOneLine'
+
+    - debug: 
+        var: findAndReplaceOrAppendOneLine # the variable/task (findAndReplaceOrAppendOneLine) that is going to print/debug
 
         # shell: can use env var. command cannot 
