@@ -147,3 +147,13 @@
 
     - name: Flush Handlers
       meta: flush_handlers
+
+    - name: Print content of httpd.conf
+      command: cat httpd.conf
+    
+    # If the regexp does not match any line, then the file is not changed. If the regexp matches a line/multiple lines, then the last matched line will be replaced. 
+    - name: Find and Replace or Append one line in/to httpd.conf
+      lineinfile:
+        dest: httpd.conf
+        regexp: '^# .*'
+        line: "Freddie is the best"
