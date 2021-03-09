@@ -178,3 +178,6 @@
     
     - import_tasks: tasksToImport.yml
       ignore_errors: true # it will ignore all failures of all imported tasks 
+
+    - import_tasks: tasksToImport.yml
+      ignore_errors: true # it will ignore all failures of all imported tasks 
