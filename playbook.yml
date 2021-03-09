@@ -9,23 +9,28 @@
       command: "yum makecache"
       
   handlers: # runs if has "change" and has "notify"
-    - name: Restart solr
+    - name: Handler one
       command: echo "Freddie you called the handler!!!"
+    - name: Handler two
+      command: echo "Junhao Nihaoma!!!"
 
   tasks:
     - name: Flush Handlers
       meta: flush_handlers
+
     - name: Install Java
       package: name=java-1.8.0-openjdk state=present
+      notify: Handler one
 
     - name: Download Solr.
       get_url:
         url: "https://archive.apache.org/dist/lucene/solr/{{ solr_version }}/solr-{{ solr_version }}.tgz"
         dest: "{{ download_dir }}/solr-{{ solr_version }}.tgz"
         checksum: "{{ solr_checksum }}"
-      notify: Restart solr
+      notify: Handler two
 
     - name: Expand Solr.
+      notify: Handler one
       unarchive:
         src: "{{ download_dir }}/solr-{{ solr_version }}.tgz"
         dest: "{{ download_dir }}"
@@ -33,6 +38,7 @@
         creates: "{{ download_dir }}/solr-{{ solr_version }}/README.txt"
 
     - name: Run Solr installation script.
+      notify: Handler two
       command: >
         {{ download_dir }}/solr-{{ solr_version }}/bin/install_solr_service.sh
         {{ download_dir }}/solr-{{ solr_version }}.tgz
@@ -42,20 +48,26 @@
         -s solr
         -p 8983
         creates={{ solr_dir }}/bin/solr
+
     - name: Ensure solr is started and enabled on boot.
       service: name=solr state=started enabled=yes
+      notify: Handler one
       
     - name: Ensure NTP is installed.
       yum: name=ntp state=present
+      notify: Handler two
     #- commend: echo Hello World
     #- shell: echo Nihaoma
     - name: Ensure NTP is running.
       service: name=ntpd state=started enabled=yes
+      notify: Handler one
     
     - name: Install Apache
       command: yum install -y --quiet httpd httpd-devel
+      notify: Handler two
 
     - name: Install Apache
+      notify: Handler one
       yum: 
         name:
           - httpd
@@ -64,9 +76,11 @@
 
     - name: Copy configuration files.
       command: cp /etc/httpd/conf/httpd.conf httpd.conf
+      notify: Handler two
     #- command: cp httpd-vhosts.conf /etc/httpd/conf/httpd-vhosts.conf
 
     - name: Copy configuration files.
+      notify: Handler one
       copy:
         src: "{{ item.src }}" # or, "{{ item['src'] }}"
         dest: "{{ item.dest }}"
@@ -82,12 +96,14 @@
 
     - name: Start Apache and configure it to run at boot
       command: service httpd start
+      notify: Handler two
 
     - name: Start Apache and configure it to run at boot
+      notify: Handler one
       service: 
         name: httpd
         state: started
         enabled: true # or ... (yes), either way. Use 0/1 may get datatype mismatch error
         
     - command: chkconfig httpd on
-
+      notify: Handler two
