@@ -172,3 +172,6 @@
         var: findAndReplaceOrAppendOneLine # the variable/task (findAndReplaceOrAppendOneLine) that is going to print/debug
 
         # shell: can use env var. command cannot 
+
+    - fail: msg="Test ignore_errors" 
+      ignore_errors: true
