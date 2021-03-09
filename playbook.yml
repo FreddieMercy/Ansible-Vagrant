@@ -15,12 +15,12 @@
       command: echo "Junhao Nihaoma!!!"
 
   tasks:
-    - name: Flush Handlers
-      meta: flush_handlers
-
     - name: Install Java
       package: name=java-1.8.0-openjdk state=present
       notify: Handler one
+
+    - name: Flush Handlers
+      meta: flush_handlers
 
     - name: Download Solr.
       get_url:
@@ -29,6 +29,9 @@
         checksum: "{{ solr_checksum }}"
       notify: Handler two
 
+    - name: Flush Handlers
+      meta: flush_handlers
+
     - name: Expand Solr.
       notify: Handler one
       unarchive:
@@ -36,6 +39,9 @@
         dest: "{{ download_dir }}"
         remote_src: true
         creates: "{{ download_dir }}/solr-{{ solr_version }}/README.txt"
+
+    - name: Flush Handlers
+      meta: flush_handlers
 
     - name: Run Solr installation script.
       notify: Handler two
@@ -49,22 +55,38 @@
         -p 8983
         creates={{ solr_dir }}/bin/solr
 
+    - name: Flush Handlers
+      meta: flush_handlers
+
     - name: Ensure solr is started and enabled on boot.
       service: name=solr state=started enabled=yes
       notify: Handler one
+
+    - name: Flush Handlers
+      meta: flush_handlers
       
     - name: Ensure NTP is installed.
       yum: name=ntp state=present
       notify: Handler two
     #- commend: echo Hello World
     #- shell: echo Nihaoma
+
+    - name: Flush Handlers
+      meta: flush_handlers
+
     - name: Ensure NTP is running.
       service: name=ntpd state=started enabled=yes
       notify: Handler one
+
+    - name: Flush Handlers
+      meta: flush_handlers
     
     - name: Install Apache
       command: yum install -y --quiet httpd httpd-devel
       notify: Handler two
+
+    - name: Flush Handlers
+      meta: flush_handlers
 
     - name: Install Apache
       notify: Handler one
@@ -74,10 +96,16 @@
           - httpd-devel
         state: present
 
+    - name: Flush Handlers
+      meta: flush_handlers
+
     - name: Copy configuration files.
       command: cp /etc/httpd/conf/httpd.conf httpd.conf
       notify: Handler two
     #- command: cp httpd-vhosts.conf /etc/httpd/conf/httpd-vhosts.conf
+
+    - name: Flush Handlers
+      meta: flush_handlers
 
     - name: Copy configuration files.
       notify: Handler one
@@ -94,9 +122,15 @@
         #- src: httpd-vhosts.conf
         #  dest: /etc/httpd/conf/httpd-vhosts.conf
 
+    - name: Flush Handlers
+      meta: flush_handlers
+
     - name: Start Apache and configure it to run at boot
       command: service httpd start
       notify: Handler two
+
+    - name: Flush Handlers
+      meta: flush_handlers
 
     - name: Start Apache and configure it to run at boot
       notify: Handler one
@@ -104,6 +138,12 @@
         name: httpd
         state: started
         enabled: true # or ... (yes), either way. Use 0/1 may get datatype mismatch error
+
+    - name: Flush Handlers
+      meta: flush_handlers
         
     - command: chkconfig httpd on
       notify: Handler two
+
+    - name: Flush Handlers
+      meta: flush_handlers
