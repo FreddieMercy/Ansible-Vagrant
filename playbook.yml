@@ -177,3 +177,4 @@
       ignore_errors: true
     
     - import_tasks: tasksToImport.yml
+      ignore_errors: true
