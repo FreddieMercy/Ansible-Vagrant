@@ -18,7 +18,7 @@
     - name: Handler two
       command: echo "Junhao Nihaoma!!!"
 
-  roles:
+  roles: # from top to btm. Like copy and paste. Always before tasks
     - theRole1_ButHasToHave_meta_and_tasks
     - theRole2
     - theRole3_status_Change
