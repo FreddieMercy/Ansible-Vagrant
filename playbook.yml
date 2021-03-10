@@ -40,3 +40,7 @@
     
     - fail: msg="[It is a test] Freddie wants me to fail. Blame him."
       when: failTheTest
+    
+    - assert:
+        that:
+          - failTheTest = true
