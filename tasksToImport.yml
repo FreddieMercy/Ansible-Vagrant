@@ -1,0 +1,8 @@
+- name: This is a task that is imported (1)
+  fail: msg="Intend to throw a failure"
+  
+- name: This is a task that is imported (2)
+  fail: msg="Intend to throw a failure"
+
+- name: This is a task that is imported (3)
+  fail: msg="Intend to throw a failure"

@@ -1,0 +1,15 @@
+    - name: Ensure NTP is installed.
+      yum: name=ntp state=present
+      notify: Handler two
+    #- commend: echo Hello World
+    #- shell: echo Nihaoma
+
+    - name: Flush Handlers
+      meta: flush_handlers
+
+    - name: Ensure NTP is running.
+      service: name=ntpd state=started enabled=yes
+      notify: Handler one
+
+    - name: Flush Handlers
+      meta: flush_handlers
