@@ -2,35 +2,55 @@
 # otherwise, it is attribute 
 - hosts: all
   become: yes # -b: (default) become superuser
+  
+  # environment: # Global
+  #   http_proxy: something.com:80 
+  
   vars_files:
     - vars.yml
   pre_tasks:
     - name: Update yum cache if needed
       command: "yum makecache"
       
-  handlers: # runs if caught exceptions (errors) and has "notify"
-    - name: Restart solr
-      service: name=solr state=restarted
+  handlers: # runs if has "change" and has "notify"
+    - name: Handler one
+      command: echo "Freddie you called the handler!!!"
+    - name: Handler two
+      command: echo "Junhao Nihaoma!!!"
 
   tasks:
     - name: Install Java
       package: name=java-1.8.0-openjdk state=present
+      notify: Handler one
+
+    - name: Flush Handlers # make handler execute immediately, otherwise the handler will wait until the end to run
+      meta: flush_handlers
 
     - name: Download Solr.
       get_url:
         url: "https://archive.apache.org/dist/lucene/solr/{{ solr_version }}/solr-{{ solr_version }}.tgz"
         dest: "{{ download_dir }}/solr-{{ solr_version }}.tgz"
         checksum: "{{ solr_checksum }}"
-      notify: Restart solr
+      notify: Handler two # must have the right name of the handler to be called, otherwise will throw error 
+      # environment: # inside this task only
+      #   http_proxy: something.com:80 
+
+    - name: Flush Handlers
+      meta: flush_handlers
 
     - name: Expand Solr.
+      notify: Handler one
       unarchive:
         src: "{{ download_dir }}/solr-{{ solr_version }}.tgz"
         dest: "{{ download_dir }}"
         remote_src: true
         creates: "{{ download_dir }}/solr-{{ solr_version }}/README.txt"
 
+    - name: Flush Handlers
+      meta: flush_handlers
+
     - name: Run Solr installation script.
+      notify: Handler two
       command: >
         {{ download_dir }}/solr-{{ solr_version }}/bin/install_solr_service.sh
         {{ download_dir }}/solr-{{ solr_version }}.tgz
@@ -40,31 +60,61 @@
         -s solr
         -p 8983
         creates={{ solr_dir }}/bin/solr
+
+    - name: Flush Handlers
+      meta: flush_handlers
+
     - name: Ensure solr is started and enabled on boot.
       service: name=solr state=started enabled=yes
+      notify: Handler one
+
+    - name: Flush Handlers
+      meta: flush_handlers
       
     - name: Ensure NTP is installed.
       yum: name=ntp state=present
+      notify: Handler two
     #- commend: echo Hello World
     #- shell: echo Nihaoma
+
+    - name: Flush Handlers
+      meta: flush_handlers
+
     - name: Ensure NTP is running.
       service: name=ntpd state=started enabled=yes
+      notify: Handler one
+
+    - name: Flush Handlers
+      meta: flush_handlers
     
     - name: Install Apache
       command: yum install -y --quiet httpd httpd-devel
+      notify: Handler two
+
+    - name: Flush Handlers
+      meta: flush_handlers
 
     - name: Install Apache
+      notify: Handler one
       yum: 
         name:
           - httpd
           - httpd-devel
         state: present
 
-    - name: Copy configuration files.
-      command: cp /etc/httpd/conf/httpd.conf httpd.conf
-    #- command: cp httpd-vhosts.conf /etc/httpd/conf/httpd-vhosts.conf
+    - name: Flush Handlers
+      meta: flush_handlers
 
     - name: Copy configuration files.
+      command: cp /etc/httpd/conf/httpd.conf httpd.conf
+      notify: Handler two
+    #- command: cp httpd-vhosts.conf /etc/httpd/conf/httpd-vhosts.conf
+
+    - name: Flush Handlers
+      meta: flush_handlers
+
+    - name: Copy configuration files.
+      notify: Handler one
       copy:
         src: "{{ item.src }}" # or, "{{ item['src'] }}"
         dest: "{{ item.dest }}"
@@ -78,14 +128,45 @@
         #- src: httpd-vhosts.conf
         #  dest: /etc/httpd/conf/httpd-vhosts.conf
 
-    - name: Start Apache and configure it to run at boot
-      command: service httpd start
+    - name: Flush Handlers
+      meta: flush_handlers
 
     - name: Start Apache and configure it to run at boot
+      command: service httpd start
+      notify: Handler two
+
+    - name: Flush Handlers
+      meta: flush_handlers
+
+    - name: Start Apache and configure it to run at boot
+      notify: Handler one
       service: 
         name: httpd
         state: started
         enabled: true # or ... (yes), either way. Use 0/1 may get datatype mismatch error
+
+    - name: Flush Handlers
+      meta: flush_handlers
         
     - command: chkconfig httpd on
+      notify: Handler two
 
+    - name: Flush Handlers
+      meta: flush_handlers
+
+    - name: Print content of httpd.conf
+      command: cat httpd.conf
+    
+    # If the regexp does not match any line, then the file is not changed. If the regexp matches a line/multiple lines, then the last matched line will be replaced. 
+    - name: Find and Replace or Append one line in/to httpd.conf
+      lineinfile:
+        dest: httpd.conf
+        regexp: '^# .*'
+        line: "Freddie is the best"
+      
+      register: findAndReplaceOrAppendOneLine # save this whole task to a variable 'findAndReplaceOrAppendOneLine'
+
+    - debug: 
+        var: findAndReplaceOrAppendOneLine # the variable/task (findAndReplaceOrAppendOneLine) that is going to print/debug
+
+        # shell: can use env var. command cannot 
